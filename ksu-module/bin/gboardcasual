@@ -1,0 +1,17 @@
+#!/system/bin/sh
+# gboardcasual ctl: install status + verify shortcut.
+CONF=/data/adb/gboardcasual/config
+LIVE=/data/local/tmp/gboardcasual.conf
+case "$1" in
+  status)
+    [ -f "$CONF" ] && { echo "-- $CONF:"; cat "$CONF"; }
+    [ -f "$LIVE" ] && { echo "-- $LIVE:"; cat "$LIVE"; }
+    ls /data/adb/modules/gboardcasual >/dev/null 2>&1 && echo "module=installed" || echo "module=not-installed"
+    pm list packages 2>/dev/null | grep -q "^package:com.gboardcasual$" && echo "hook-apk=installed" || echo "hook-apk=missing"
+    pm list packages 2>/dev/null | grep -q "^package:com.google.android.inputmethod.latin$" && echo "gboard=installed" || echo "gboard=missing"
+    dumpsys package com.google.android.inputmethod.latin 2>/dev/null | grep -E "versionName" | head -n 1 | sed 's/^ *//'
+    ls /data/adb/modules/zygisk_lsposed >/dev/null 2>&1 && echo "lsposed=present" || echo "lsposed=missing"
+    ;;
+  verify) sh "$(dirname "$0")/verify.sh";;
+  *) echo "usage: gboardcasual {status|verify}";;
+esac

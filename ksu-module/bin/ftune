@@ -1,0 +1,16 @@
+#!/system/bin/sh
+# ftune - change GboardCasual rewrite rules WITHOUT reboot.
+# usage: ftune "style=lu"  (then kill Gboard and reopen it)
+# keys: mode=1/0 style=kamu/lu slang=0/1 auto=1/0 spy=1/0
+# escape hatch for Gboard updates (no rebuild): gate=Class:method
+#   (CharSequence args get rewritten, e.g. gate=ouo:f)
+# future flexible pass (reserved, v0.1 stays dictionary-only):
+#   llm=0/1 endpoint=http://127.0.0.1:PORT/paraphrase target=en
+# custom pairs, one per line: Formal=casual
+# NOTE: one call replaces the whole file; pass all lines at once, e.g.
+#   ftune "$(printf 'mode=1\nstyle=lu\nslang=1\nKamu=lu')"
+CONF=/data/local/tmp/gboardcasual.conf
+[ -n "$1" ] && echo "$1" > "$CONF"
+chmod 644 "$CONF" 2>/dev/null
+echo "-- $CONF:"; cat "$CONF" 2>/dev/null || echo "(defaults: mode=1 style=kamu slang=0 auto=1 spy=1)"
+am force-stop com.google.android.inputmethod.latin 2>/dev/null && echo "killed Gboard - translate again to apply"

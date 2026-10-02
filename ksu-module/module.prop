@@ -1,0 +1,7 @@
+id=gboardcasual
+name=GboardCasual
+version=v0.1.0
+versionCode=1
+author=itswill00
+description=Soften Gboard Translate output into casual Indonesian. Client-side rewrite, no server change.
+updateJson=https://github.com/itswill00/GboardCasual/raw/main/update.json
